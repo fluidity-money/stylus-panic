@@ -1,0 +1,16 @@
+[package]
+name = "stylus-panic"
+version = "0.1.0"
+edition = "2024"
+description = "stylus-panic is a panic handler that's available for no_std environments that uses stylus-interpreter's die function if it's available. It also provides a helpful console logger macro."
+rust-version = "1.85"
+license = "MIT"
+repository = "https://github.com/fluidity-money/stylus-panic"
+homepage = "https://github.com/fluidity-money/stylus-panic"
+keywords = ["arbitrum", "ethereum", "stylus", "alloy"]
+
+[dependencies]
+
+[features]
+stylus-interpreter = []
+std = []
