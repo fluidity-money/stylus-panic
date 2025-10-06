@@ -23,10 +23,8 @@ extern "C" {
     fn wasm_request_rand(ptr: i32, len: i32);
 }
 
-#[cfg(not(all(target_arch = "wasm32", feature = "stylus-interpreter")))]
-pub fn log_txt(_: *const u8, _: usize) {}
-
 #[macro_export]
+#[cfg(all(target_arch = "wasm32", feature = "stylus-interpreter"))]
 macro_rules! harness_dbg {
     ($val:expr) => {
     {
@@ -42,6 +40,13 @@ macro_rules! harness_dbg {
         unsafe { $crate::log_txt(msg.as_ptr(), msg.len()) };
         tup
     }};
+}
+
+#[macro_export]
+#[cfg(not(any(target_arch = "wasm32", feature = "stylus-interpreter")))]
+macro_rules! harness_dbg {
+    ($val:expr) => {};
+    ($($vals:expr),+ $(,)?) => {};
 }
 
 #[cfg(all(not(feature = "std"), target_arch = "wasm32"))]

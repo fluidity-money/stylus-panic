@@ -1,6 +1,6 @@
 [package]
 name = "stylus-panic"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 description = "stylus-panic is a panic handler that's available for no_std environments that uses stylus-interpreter's die function if it's available. It also provides a helpful console logger macro."
 rust-version = "1.85"
