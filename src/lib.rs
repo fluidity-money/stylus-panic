@@ -43,7 +43,7 @@ macro_rules! harness_dbg {
 }
 
 #[macro_export]
-#[cfg(not(any(target_arch = "wasm32", feature = "stylus-interpreter")))]
+#[cfg(not(all(target_arch = "wasm32", feature = "stylus-interpreter")))]
 macro_rules! harness_dbg {
     ($val:expr) => {};
     ($($vals:expr),+ $(,)?) => {};
