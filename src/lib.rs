@@ -2,25 +2,25 @@
 
 extern crate alloc;
 
-#[cfg(all(target_arch = "wasm32", feature = "stylus-interpreter"))]
-#[link(wasm_import_module = "console")]
-extern "C" {
-    pub fn log_txt(ptr: *const u8, len: usize);
-}
+use alloy_primitives::Address;
 
 #[cfg(all(target_arch = "wasm32", feature = "stylus-interpreter"))]
-#[link(wasm_import_module = "stylus_interpreter")]
-#[allow(unused_code)]
-extern "C" {
-    fn die(ptr: *const u8, len: usize, rc: i32);
-}
+pub mod host {
+    #[link(wasm_import_module = "console")]
+    unsafe extern "C" {
+        pub fn log_txt(ptr: *const u8, len: usize);
+    }
 
-#[cfg(all(target_arch = "wasm32", feature = "stylus-interpreter"))]
-#[link(wasm_import_module = "stylus_test_runner")]
-#[allow(unused_code)]
-extern "C" {
-    fn set_msg_sender(ptr: i32);
-    fn wasm_request_rand(ptr: i32, len: i32);
+    #[link(wasm_import_module = "stylus_interpreter")]
+    unsafe extern "C" {
+        pub fn die(ptr: *const u8, len: usize, rc: i32);
+    }
+
+    #[link(wasm_import_module = "stylus_test_runner")]
+    unsafe extern "C" {
+        pub fn set_msg_sender(ptr: *const u8);
+        pub fn wasm_request_rand(ptr: *const u8, len: i32);
+    }
 }
 
 #[macro_export]
@@ -55,19 +55,19 @@ fn panic(_msg: &core::panic::PanicInfo) -> ! {
     #[cfg(feature = "stylus-interpreter")]
     {
         let msg = alloc::format!("{_msg}");
-        unsafe { die(msg.as_ptr() as i32, msg.len() as i32, 1) }
+        unsafe { host::die(msg.as_ptr(), msg.len(), 1) }
     }
     core::arch::wasm32::unreachable()
 }
 
 #[cfg(all(target_arch = "wasm32", feature = "stylus-interpreter"))]
 pub fn set_msg_sender(sender: Address) {
-    set_msg_sender(sender.0.as_ptr())
+    unsafe { host::set_msg_sender(sender.0.as_ptr()) }
 }
 
 #[cfg(all(target_arch = "wasm32", feature = "stylus-interpreter"))]
-pub fn request_randomness<SIZE: usize>() -> [u8; SIZE] {
+pub fn request_randomness<const SIZE: usize>() -> [u8; SIZE] {
     let mut b = [0u8; SIZE];
-    wasm_request_rand(b.as_mut_ptr(), SIZE);
+    unsafe { host::wasm_request_rand(b.as_mut_ptr(), SIZE as i32) }
     b
 }
