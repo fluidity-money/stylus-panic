@@ -31,14 +31,14 @@ macro_rules! harness_dbg {
     {
         let tmp = $val;
         let msg = alloc::format!("[{}:{}] {} = {:#?}\n", file!(), line!(), stringify!($val), &tmp);
-        unsafe { $crate::log_txt(msg.as_ptr(), msg.len()) };
+        unsafe { $crate::host::log_txt(msg.as_ptr(), msg.len()) };
         tmp
     }};
     ($($vals:expr),+ $(,)?) => {
     {
         let tup = ($($vals),+);
         let msg = alloc::format!("[{}:{}] {} = {:#?}\n", file!(), line!(), stringify!(($($vals),+)), &tup);
-        unsafe { $crate::log_txt(msg.as_ptr(), msg.len()) };
+        unsafe { $crate::host::log_txt(msg.as_ptr(), msg.len()) };
         tup
     }};
 }
