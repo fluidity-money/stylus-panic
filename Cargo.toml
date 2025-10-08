@@ -10,7 +10,7 @@ homepage = "https://github.com/fluidity-money/stylus-panic"
 keywords = ["arbitrum", "ethereum", "stylus", "alloy"]
 
 [dependencies]
-alloy-primitives = { version = "*", default-features = false }
+alloy-primitives = { version = ">=0.8", default-features = false }
 
 [features]
 stylus-interpreter = []

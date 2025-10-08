@@ -2,6 +2,7 @@
 
 extern crate alloc;
 
+#[cfg(feature = "stylus-interpreter")]
 use alloy_primitives::Address;
 
 #[cfg(all(target_arch = "wasm32", feature = "stylus-interpreter"))]
